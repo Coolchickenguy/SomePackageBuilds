@@ -1,0 +1,28 @@
+{
+  "name": "chickenwebsite",
+  "version": "1.0.0",
+  "description": "A website for my github",
+  "main": "build.js",
+  "type": "module",
+  "scripts": {
+    "build":"node build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coolchickenguy/Coolchickenguy.github.io.git"
+  },
+  "keywords": [
+    "Github.io"
+  ],
+  "author": "Coolchickenguy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Coolchickenguy/Coolchickenguy.github.io/issues"
+  },
+  "homepage": "https://github.com/Coolchickenguy/Coolchickenguy.github.io#readme",
+  "dependencies": {
+    "mkdirp": "^3.0.1",
+    "tar": "^7.2.0",
+    "yauzl-promise": "^4.0.0"
+  }
+}
