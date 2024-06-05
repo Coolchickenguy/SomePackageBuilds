@@ -27,3 +27,9 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build
+    - run: git remote set-url origin ${{ secrets.ssh }}
+    - run: git status
+    - run: git add .
+    - run: git commit -m "Build"
+    - run: git fetch origin build
+    - run: git push origin HEAD:build
