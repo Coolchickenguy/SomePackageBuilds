@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/Coolchickenguy/Coolchickenguy.github.io#readme",
   "dependencies": {
+    "micromatch": "^4.0.7",
     "mkdirp": "^3.0.1",
+    "parse-gitignore": "^2.0.0",
     "tar": "^7.2.0",
     "yauzl-promise": "^4.0.0"
   }
