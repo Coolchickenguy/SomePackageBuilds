@@ -35,7 +35,7 @@ var output = await Promise.all(
           }
         });
         task.on("exit", (code) => {
-          res({ code, ...(outputs.map(val => Buffer.isBuffer(val) ? val.toString("base64") : val)) });
+          res({ code, ...(Object.keys(outputs).forEach(val => outputs[val] = Buffer.isBuffer(outputs[val]) ? val.toString("base64") : outputs[val])) });
         });
       })
   )
