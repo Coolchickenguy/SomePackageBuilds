@@ -31,7 +31,7 @@ var output = await Promise.all(
           if (outputs.stderr === "none") {
             outputs.stderr = Buffer.from(chunk);
           } else {
-            outputs.stderr = Buffer.concat(outputs.stderr, Buffer.from(chunk));
+            outputs.stderr = Buffer.concat([outputs.stderr, Buffer.from(chunk)]);
           }
         });
         task.on("exit", (code) => {
