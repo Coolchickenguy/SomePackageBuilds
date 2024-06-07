@@ -1,8 +1,7 @@
 import * as fs from "fs";
 import { join } from "path";
-import { exec } from "child_process";
+import { exec, spawn } from "child_process";
 import patch from "./lib/es_patches.js";
-import { stderr, stdout } from "process";
 patch(import.meta);
 var builders_dir = join(__dirname, "packages");
 var builders = fs
@@ -15,19 +14,29 @@ var output = await Promise.all(
   builders.map(
     (data) =>
       new Promise((res) => {
-        var task = exec(
-          "node " + data.file_Name,
-          function (error, stdout, stderr) {
-            if (error) {
-              res({"success":false, ...arguments});
-            } else {
-              res({"success":true, stdout,stderr});
-            }
+        var outputs = { stdout: "none", stderr: "none" };
+        var task = spawn("node " + data.file_Name, {
+          cwd: data.run_at,
+          stdio: ["ignore", "pipe", "pipe"],
+        });
+        task.stdout.on("data", (chunk) => {
+          if (outputs.stdout === "none") {
+            outputs.stdout = Buffer.from(chunk);
+          } else {
+            outputs.stdout = Buffer.concat(outputs.stdout, Buffer.from(chunk));
           }
-        );
-        task.stdout.pipe(stdout);
-        task.stderr.pipe(stderr);
+        });
+        task.stderr.on("data", (chunk) => {
+          if (outputs.stderr === "none") {
+            outputs.stderr = Buffer.from(chunk);
+          } else {
+            outputs.stderr = Buffer.concat(outputs.stderr, Buffer.from(chunk));
+          }
+        });
+        task.on("exit", (code) => {
+          res({ code, ...outputs });
+        });
       })
   )
 );
-fs.writeFileSync("./packages/log.json",JSON.stringify(output));
+fs.writeFileSync("./packages/log.json", JSON.stringify(output));
