@@ -6,7 +6,7 @@ patch(import.meta);
 var builders_dir = join(__dirname, "packages");
 var builders = fs
   .readdirSync(builders_dir)
-  .filter((folder) => fs.statSync(folder).isDirectory())
+  .filter((folder) => fs.statSync(join(builders_dir, folder)).isDirectory())
   .map((folder) => {
     return { file_Name: "build.js", run_at: join(builders_dir, folder) };
   });
