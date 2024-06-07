@@ -15,7 +15,7 @@ var output = await Promise.all(
     (data) =>
       new Promise((res) => {
         var outputs = { stdout: "none", stderr: "none" };
-        var task = spawn("node",[data.file_Name], {
+        var task = spawn("node", [data.file_Name], {
           cwd: data.run_at,
         });
         task.stdout.on("data", (chunk) => {
@@ -23,7 +23,10 @@ var output = await Promise.all(
           if (outputs.stdout === "none") {
             outputs.stdout = Buffer.from(chunk);
           } else {
-            outputs.stdout = Buffer.concat([outputs.stdout, Buffer.from(chunk)]);
+            outputs.stdout = Buffer.concat([
+              outputs.stdout,
+              Buffer.from(chunk),
+            ]);
           }
         });
         task.stderr.on("data", (chunk) => {
@@ -31,11 +34,19 @@ var output = await Promise.all(
           if (outputs.stderr === "none") {
             outputs.stderr = Buffer.from(chunk);
           } else {
-            outputs.stderr = Buffer.concat([outputs.stderr, Buffer.from(chunk)]);
+            outputs.stderr = Buffer.concat([
+              outputs.stderr,
+              Buffer.from(chunk),
+            ]);
           }
         });
         task.on("exit", (code) => {
-          res({ code, ...(Object.keys(outputs).forEach(val => outputs[val] = Buffer.isBuffer(outputs[val]) ? val.toString("base64") : outputs[val])) });
+          Object.keys(outputs).forEach((val) => 
+            outputs[val] = Buffer.isBuffer(outputs[val])
+              ? outputs[val].toString("base64")
+              : outputs[val]
+          );
+          res({ code, ...outputs });
         });
       })
   )
