@@ -35,7 +35,7 @@ var output = await Promise.all(
           }
         });
         task.on("exit", (code) => {
-          res({ code, ...outputs });
+          res({ code, ...(outputs.map(val => Buffer.isBuffer(val) ? val.toString("base64") : val)) });
         });
       })
   )
