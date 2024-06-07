@@ -15,18 +15,19 @@ var output = await Promise.all(
     (data) =>
       new Promise((res) => {
         var outputs = { stdout: "none", stderr: "none" };
-        var task = spawn("node " + data.file_Name, {
+        var task = spawn("node",[data.file_Name], {
           cwd: data.run_at,
-          stdio: ["ignore", "pipe", "pipe"],
         });
         task.stdout.on("data", (chunk) => {
+          process.stdout.write(chunk);
           if (outputs.stdout === "none") {
             outputs.stdout = Buffer.from(chunk);
           } else {
-            outputs.stdout = Buffer.concat(outputs.stdout, Buffer.from(chunk));
+            outputs.stdout = Buffer.concat([outputs.stdout, Buffer.from(chunk)]);
           }
         });
         task.stderr.on("data", (chunk) => {
+          process.stderr.write(chunk);
           if (outputs.stderr === "none") {
             outputs.stderr = Buffer.from(chunk);
           } else {
